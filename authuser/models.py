@@ -30,7 +30,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model that supports using email instead of username"""
     username = models.CharField(max_length=255, unique=True, db_index=True, )
     email = models.EmailField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
@@ -47,14 +46,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
-"""Generate a token for the user"""
-
-
-def token(self):
-    refresh = RefreshToken.for_user(self)
-
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token)
-    }
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
